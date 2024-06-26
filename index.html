@@ -1,0 +1,242 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link href="./static/resources/bootstrap.min.css" rel="stylesheet">
+    <link href="./static/resources/stylesheet.css" rel="stylesheet">
+    
+    <title>VIMI</title>
+</head>
+<body>
+
+	<section class="jumbotron text-center pb-2">
+        <div class="container">
+            <h1 class="jumbotron-heading">VIMI: Grounding Video Generation through Multi-modal Instruction</h1>
+
+            <h4 class="font-italic pt-2" style="font-weight: normal">
+                <a href="https://yuwfan.github.io/">Yuwei Fang</a><sup>1</sup>
+                <a href="https://www.willimenapace.com/">Willi Menapace</a><sup>1</sup>
+                <a href="https://github.com/AliaksandrSiarohin">Aliaksandr Siarohin</a><sup>1</sup>
+                <a href="https://tsaishien-chen.github.io/">Tsai-Shien Chen</a><sup>1,2,*</sup></br>
+                <a href="https://wangkua1.github.io/">Kuan-Chien Wang</a><sup>1</sup>
+                <a href="https://universome.github.io/">Ivan Skorokhodov</a><sup>1</sup>
+                <a href="https://www.phontron.com/">Graham Neubig</a><sup>3</sup>
+                <a href="http://www.stulyakov.com/">Sergey Tulyakov</a><sup>1</sup>
+            </h4>
+            <p class="pb-4 mt-3">
+                 Snap Inc.<sup>1</sup> UC Merced<sup>2</sup> Carnegie Mellon University<sup>3</sup>
+                 Work performed while interning at Snap Inc.<sup>*</sup><br>
+            </p>
+        </div>
+    </section>
+
+    <div class="container-md">
+        <div class="row pt-1 justify-content-sm-center">
+            <a class="sm-1 mx-1 btn btn-primary mt-2" href="" role="button">Paper</a>
+            <a class="sm-1 mx-1 btn btn-primary mt-2" href="index.html" role="button">Code</a>
+        </div>	
+    </div>
+
+		<div class="container">
+			<hr class="mt-5">
+			<div class="w-75 mx-auto text-justify">
+				<h2 class="pt-4 text-center">Abstract</h2>
+				<p class="lead">Existing text-to-video diffusion models rely solely on text-only encoders for their pretraining. This limitation stems from the absence of large-scale multimodal prompt video datasets, resulting in a lack of visual grounding and restricting their versatility and application in multimodal integration.
+          To address this, we construct a large-scale multimodal prompt dataset by employing retrieval methods to pair in-context examples with the given text prompts and then utilize a two-stage training strategy to enable diverse video generation tasks within the same model. In the first stage, we propose a multimodal conditional video generation framework for pretraining on these augmented datasets, establishing a foundational model for grounded video generation. Secondly, we fine-tune the model from the first stage on three video generation tasks, incorporating multimodal instructions. This process further refines the model's ability to handle diverse inputs and tasks, ensuring seamless integration of multimodal information. After this two-stage training process, VIMI demonstrates multimodal understanding capabilities, producing contextually rich and personalized videos grounded in the provided inputs, as shown in Figure 1. Compared to previous visual grounded video generation methods, VIMI can synthesize consistent and temporally coherent videos with large motion while retaining the semantic control. Lastly, VIMI also achieves state-of-the-art text-to-video generation results on UCF101 benchmark.</p>
+			</div>
+
+			<h3 class="pt-5">Our Framework</h3>
+			<div class="row pt-3 nopadding">
+				<div class="col-sm-6 col-md-6 col-xl-6 col-lg-6 p-2 text-center">
+				    <img src="./static/images/pretraining.png" class="w-100">
+				</div>
+				<div class="col-sm-6 col-md-6 col-xl-6 col-lg-6 p-2 text-center">
+				    <img src="./static/images/instruction_tuning.png" class="w-100">
+				</div>
+			</div>
+			
+			<div class="row pt-3 nopadding">
+				<div class="col-sm-6 col-md-6 col-xl-6 col-lg-6 p-2 text-center">
+				    <p class="lead">Retrieve-Augmented Pretraining for Videos</p>
+				</div>
+				<div class="col-sm-6 col-md-6 col-xl-6 col-lg-6 p-2 text-center">
+				    <p class="lead">Multimodal Instruction Tuning for Videos</p>
+				</div>
+			</div>
+
+			<p class="lead pt-2">We first construct a large-scale dataset by employing retrieval
+        methods to pair multimodal in-context with given text prompts. Then we present a multimodal conditional video
+        generation framework for pretraining on these augmented datasets</p>
+
+			<p class="lead pt-2">We propose multimodal instruction tuning
+        for video generation, grounding the model on customized input specified in different multimodal instructions for
+        video generation, including subject-driven video generation, video prediction and text-to-video.</p>
+
+      <h3 class="pt-5">Single-Subject Video Generation</h3>
+
+      <div class="image-container">
+        <img src="./static/videos/references/dog.jpg" onclick="displayVideo(0)">
+        <img src="./static/videos/references/cat.jpg" onclick="displayVideo(1)">
+        <img src="./static/videos/references/human_2.png" onclick="displayVideo(2)" class="selected">
+        <img src="./static/videos/references/human_4.png" onclick="displayVideo(3)">
+        <img src="./static/videos/references/human_5.png" onclick="displayVideo(4)">
+      </div>
+
+			<div id="video-container">
+        <video id="video0" controls autoplay>
+          <source src="./static/videos/single_subject/corgi_beach.mp4" type="video/mp4">
+        </video>
+        <video id="video1" controls>
+          <source src="./static/videos/single_subject/cat_beach.mp4" type="video/mp4">
+        </video>
+        <video id="video2" controls>
+          <source src="./static/videos/single_subject/human_2.mp4" type="video/mp4">
+        </video>
+        <video id="video3" controls>
+          <source src="./static/videos/single_subject/human_4.mp4" type="video/mp4">
+        </video>
+        <video id="video4" controls>
+          <source src="./static/videos/single_subject/human_5.mp4" type="video/mp4">
+        </video>
+        <div class="video-description" id="video-description-single"></div>
+      </div>
+
+
+      <h3 class="pt-5">Multi-subject Video Generation</h3>
+      <div class="image-container">
+        <img src="./static/videos/references/dog.jpg" class="selected" width="150" height="150">
+        <img src="./static/videos/multi_subject/1.jpeg" onclick="displayVideo(6)" class="selected" width="150" height="150">
+        <img src="./static/videos/multi_subject/2.jpeg" onclick="displayVideo(7)" width="150" height="150">
+        <img src="./static/videos/multi_subject/3.jpeg" onclick="displayVideo(8)" width="150" height="150">
+        <img src="./staticvideos/multi_subject/4.jpeg" onclick="displayVideo(9)" width="150" height="150">
+      </div>
+
+      <div id="video-container">
+        <video id="video6" controls autoplay>
+            <source src="./static/videos/multi_subject/1.mp4" type="video/mp4" />
+        </video>
+        <video id="video7" controls>
+          <source src="./static/videos/multi_subject/2.mp4" type="video/mp4" />
+        </video>
+        <video id="video8" controls>
+          <source src="./static/videos/multi_subject/3.mp4" type="video/mp4" />
+        </video>
+        <video id="video9" controls>
+          <source src="./static/videos/multi_subject/4.mp4" type="video/mp4" />
+        </video>
+        <div class="video-multi-description" id="video-description-multi"></div>
+      </div>
+
+      <h3 class="pt-5">Video Prediction</h3>
+      <div class="image-container">
+        <img src="./static/videos/predict/car_0.png" onclick="displayVideo(10)" class="selected" width="150" height="150">
+        <img src="./static/videos/predict/car_1.jpg" onclick="displayVideo(11)" width="150" height="150">
+        <img src="./static/videos/predict/car_2.jpg" onclick="displayVideo(12)" width="150" height="150">
+        <img src="./static/videos/predict/panda.png" onclick="displayVideo(13)" width="150" height="150">
+        <img src="./static/videos/predict/squirrel.png" onclick="displayVideo(14)" width="150" height="150">
+      </div>
+      <div id="video-container">
+        <video id="video10" controls autoplay>
+            <source src="./static/videos/predict/car_0.mp4" type="video/mp4" />
+        </video>
+        <video id="video11" controls>
+          <source src="./static/videos/predict/car_1.mp4" type="video/mp4" />
+        </video>
+        <video id="video12" controls>
+          <source src="./static/videos/predict/car_2.mp4" type="video/mp4" />
+        </video>
+        <video id="video13" controls>
+          <source src="./static/videos/predict/panda.mp4" type="video/mp4" />
+        </video>
+        <video id="video14" controls>
+          <source src="./static/videos/predict/squirrel.mp4" type="video/mp4" />
+        </video>
+      </div>
+		</div>
+
+		<!-- Footer -->
+		<section class="jumbotron text-center py-7 mt-5 mb-0">
+		</section>
+
+
+		<!-- Optional JavaScript -->
+		<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+		<script src="./static/resources/jquery-3.4.1.slim.min.js"></script>
+		<script src="./static/resources/popper.min.js"></script>
+		<script src="./static/resources/bootstrap.min.js"></script>
+		<script>
+
+const videoDescriptions = [
+  "A <image> is sitting on the beach.",
+  "A <image> is sitting on the beach.",
+  "A <image> is sitting in front of a computer and talking to the camera.",
+  "A <image> is sitting in front of a computer and talking to the camera.",
+  "A <image> is sitting in front of a computer and talking to the camera.",
+  "",
+  "A <image> is sitting on the <image>.",
+  "A <image> is playing in a <image>.",
+  "A <image> is sitting on the <image>.",
+  "A <image> is playing in a <image>.",
+];
+
+			$(function(){
+			  $('#video').css({ width: $(window).innerWidth() + 'px', height: $(window).innerHeight() + 'px' });
+
+			  $(window).resize(function(){
+			    $('#video').css({ width: $(window).innerWidth() + 'px', height: $(window).innerHeight() + 'px' });
+			  });
+			});
+      document.addEventListener('DOMContentLoaded', function() {
+      // Show default video when page loads
+      var defaultVideo = document.getElementById('video2');
+      var defaultDescription = videoDescriptions[2];
+      if (defaultVideo) {
+        defaultVideo.style.display = 'block';
+        document.getElementById('video-description-single').textContent = defaultDescription;
+      }
+      var defaultVideo = document.getElementById('video6');
+      var defaultDescription_multi = videoDescriptions[6];
+      if (defaultVideo) {
+        defaultVideo.style.display = 'block';
+        document.getElementById('video-description-multi').textContent = defaultDescription_multi;
+      }
+
+      var defaultVideo = document.getElementById('video10');
+      if (defaultVideo) {
+        defaultVideo.style.display = 'block';
+      }
+    });
+    
+    function displayVideo(index) {
+      // Hide all videos
+      var videos = document.querySelectorAll('#video-container video');
+      videos.forEach(video => video.style.display = 'none');
+    
+      // Show the selected video
+      var selectedVideo = document.getElementById('video' + index);
+      if (selectedVideo) {
+        selectedVideo.style.display = 'block';
+        selectedVideo.play();
+        if (index < 5) {
+          document.getElementById('video-description-single').textContent = videoDescriptions[index];
+        } else {
+          document.getElementById('video-description-multi').textContent = videoDescriptions[index];
+        }
+      }
+
+      // Update image shading
+      var images = document.querySelectorAll('.image-container img');
+      images.forEach(image => image.classList.remove('selected'));
+      images[index].classList.add('selected');
+      images[5].classList.add('selected');
+      
+    }
+
+		</script>
+
+	</body>
+	</html>
